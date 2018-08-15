@@ -39,7 +39,7 @@ public class MenuScreen extends Base2DScreen{
         temp = new Vector2(0, 0);
         float distance = temp.cpy().sub(position).len();
         velocity = new Vector2(distance/60.f,distance/60.f);
-        if (Gdx.input.isTouched()){
+        if (touchDown(Gdx.input.getX(),Gdx.input.getY())){
 
             temp.set(touch.x, touch.y);
         }else{
