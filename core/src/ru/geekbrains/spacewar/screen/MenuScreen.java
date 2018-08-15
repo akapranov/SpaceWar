@@ -20,6 +20,7 @@ public class MenuScreen extends Base2DScreen{
     Vector2 velocity;
 
     Vector2 touch;
+    Vector2 temp;
 
     public MenuScreen(Game game) {
         super(game);
@@ -32,8 +33,18 @@ public class MenuScreen extends Base2DScreen{
         hero = new Texture("ship.png");
         backgraund = new Texture("background.jpg");
 
-        position = new Vector2(0, 0);
-        velocity = new Vector2(0.1f, 0.7f);
+
+        position = new Vector2(0,0);
+
+        temp = new Vector2(0, 0);
+        float distance = temp.cpy().sub(position).len();
+        velocity = new Vector2(distance/60.f,distance/60.f);
+        if (Gdx.input.isTouched()){
+
+            temp.set(touch.x, touch.y);
+        }else{
+            touch = new Vector2(0, 0);
+        }
     }
 
     @Override
