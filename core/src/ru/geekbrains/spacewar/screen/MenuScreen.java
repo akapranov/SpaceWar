@@ -16,11 +16,10 @@ public class MenuScreen extends Base2DScreen{
     SpriteBatch batch;
     Texture backgraund;
     Texture hero;
-
     Vector2 position;
-
     Vector2 velocity;
     Vector2 touch;
+    Vector2 temp;
 
     public MenuScreen(Game game) {
         super(game);
@@ -35,12 +34,14 @@ public class MenuScreen extends Base2DScreen{
         velocity = new Vector2(0,0);
         position = new Vector2(0,0);
         touch = new Vector2();
+        temp = new Vector2();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        if (touch.cpy().sub(position).len() > SPEED){
+        temp.set(touch);
+        if (temp.cpy().sub(position).len() > SPEED){
             position.add(velocity);
         }else{
             position.set(touch);
