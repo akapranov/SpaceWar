@@ -41,7 +41,7 @@ public class MenuScreen extends Base2DScreen{
     public void render(float delta) {
         super.render(delta);
         temp.set(touch);
-        if (temp.cpy().sub(position).len() > SPEED){
+        if (temp.sub(position).len() > SPEED){
             position.add(velocity);
         }else{
             position.set(touch);
