@@ -12,15 +12,15 @@ import ru.geekbrains.spacewar.base.Base2DScreen;
 *  Экран Меню
 */
 public class MenuScreen extends Base2DScreen{
+    public static final float SPEED = 1.f;
     SpriteBatch batch;
     Texture backgraund;
     Texture hero;
 
     Vector2 position;
-    Vector2 velocity;
 
+    Vector2 velocity;
     Vector2 touch;
-    Vector2 temp;
 
     public MenuScreen(Game game) {
         super(game);
@@ -32,29 +32,24 @@ public class MenuScreen extends Base2DScreen{
         batch = new SpriteBatch();
         hero = new Texture("ship.png");
         backgraund = new Texture("background.jpg");
-
-
+        velocity = new Vector2(0,0);
         position = new Vector2(0,0);
-
-        temp = new Vector2(0, 0);
-        float distance = temp.cpy().sub(position).len();
-        velocity = new Vector2(distance/60.f,distance/60.f);
-        if (touchDown(Gdx.input.getX(),Gdx.input.getY())){
-
-            temp.set(touch.x, touch.y);
-        }else{
-            touch = new Vector2(0, 0);
-        }
+        touch = new Vector2();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        if (touch.cpy().sub(position).len() > SPEED){
+            position.add(velocity);
+        }else{
+            position.set(touch);
+            velocity.setZero();
+        }
         batch.begin();
         batch.draw(backgraund,0,0, 1024,780);
         batch.draw(hero, position.x, position.y, 52.75f, 53f);
         batch.end();
-        position.add(velocity);
     }
 
     @Override
@@ -69,6 +64,7 @@ public class MenuScreen extends Base2DScreen{
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        velocity.set(touch.cpy().sub(position).setLength(SPEED));
         return false;
     }
 
