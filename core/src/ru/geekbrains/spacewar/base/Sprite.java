@@ -1,6 +1,5 @@
 package ru.geekbrains.spacewar.base;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -59,6 +58,6 @@ public class Sprite extends Rect{
     }
 
     public void update(float delta){
-        
+
     }
 }
