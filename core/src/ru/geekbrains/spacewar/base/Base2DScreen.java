@@ -63,6 +63,14 @@ public class Base2DScreen implements Screen, InputProcessor{
         float aspect = width / (float) height;
         worldBounds.setHeight(1f);
         worldBounds.setHeight(1f*aspect);
+        MatrixUtils.calcTransitionMatrix(worldToGl,worldBounds,glBounds);
+        batch.setProjectionMatrix(worldToGl);
+        MatrixUtils.calcTransitionMatrix(screenToWorld, screenBounds, worldBounds);
+        resize(worldBounds);
+    }
+
+    public void  resize(Rect worldBounds){
+
     }
 
     @Override
@@ -102,16 +110,37 @@ public class Base2DScreen implements Screen, InputProcessor{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX,screenBounds.getHeight() - screenY).mul(screenToWorld);
+        touchDown(touch,pointer);
         return false;
     }
 
+    public boolean touchDown(Vector2 touch, int pointer) {
+
+        return false;
+    }
+    
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX,screenBounds.getHeight() - screenY).mul(screenToWorld);
+        touchUp(touch, pointer);
+        return false;
+    }
+
+    public boolean touchUp(Vector2 touch, int pointer) {
+
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        touch.set(screenX,screenBounds.getHeight() - screenY).mul(screenToWorld);
+        touchDragged(touch, pointer);
+        return false;
+    }
+
+    public boolean touchDragged(Vector2 touch, int pointer) {
+
         return false;
     }
 
