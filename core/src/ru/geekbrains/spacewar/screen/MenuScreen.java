@@ -13,7 +13,6 @@ import ru.geekbrains.spacewar.base.Base2DScreen;
 */
 public class MenuScreen extends Base2DScreen{
     public static final float SPEED = 1.f;
-    SpriteBatch batch;
     Texture backgraund;
     Texture hero;
     Vector2 position;
@@ -28,7 +27,6 @@ public class MenuScreen extends Base2DScreen{
     @Override
     public void show() {
         super.show();
-        batch = new SpriteBatch();
         hero = new Texture("ship.png");
         backgraund = new Texture("background.jpg");
         velocity = new Vector2(0,0);
@@ -56,7 +54,6 @@ public class MenuScreen extends Base2DScreen{
     @Override
     public void dispose() {
         super.dispose();
-        batch.dispose();
         backgraund.dispose();
         hero.dispose();
     }
