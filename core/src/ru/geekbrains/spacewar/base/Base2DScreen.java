@@ -27,7 +27,7 @@ public class Base2DScreen implements Screen, InputProcessor{
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
 
-    private final Vector2 touch = new Vector2();
+    private Vector2 touch = new Vector2();
 
     public Base2DScreen(Game game){
         this.game = game;
@@ -119,7 +119,7 @@ public class Base2DScreen implements Screen, InputProcessor{
 
         return false;
     }
-    
+
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         touch.set(screenX,screenBounds.getHeight() - screenY).mul(screenToWorld);

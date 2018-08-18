@@ -1,13 +1,13 @@
 package ru.geekbrains.spacewar.screen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.base.Base2DScreen;
+import ru.geekbrains.spacewar.base.Sprite;
+import ru.geekbrains.spacewar.math.Rect;
 
 /*
 *  Экран Меню
@@ -34,6 +34,7 @@ public class MenuScreen extends Base2DScreen{
         backgraund = new Texture("background.jpg");
         bg = new Sprite(new TextureRegion(backgraund));
         h = new Sprite(new TextureRegion(hero));
+        bg.setSize(1f, 1f);
         velocity = new Vector2(0,0);
         position = new Vector2(0,0);
         touch = new Vector2();
@@ -63,17 +64,33 @@ public class MenuScreen extends Base2DScreen{
         hero.dispose();
     }
 
+//    @Override
+//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//        super.touchDown(screenX, screenY, pointer, button);
+//        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+//        velocity.set(touch.cpy().sub(position).setLength(SPEED));
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+//        super.touchUp(screenX, screenY, pointer, button);
+//        return false;
+//    }
+
+
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        super.touchDown(screenX, screenY, pointer, button);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        velocity.set(touch.cpy().sub(position).setLength(SPEED));
-        return false;
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        super.touchUp(screenX, screenY, pointer, button);
-        return false;
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        return super.touchUp(touch, pointer);
     }
 }
