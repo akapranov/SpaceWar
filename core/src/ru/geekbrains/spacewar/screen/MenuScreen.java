@@ -3,7 +3,8 @@ package ru.geekbrains.spacewar.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.base.Base2DScreen;
@@ -19,6 +20,8 @@ public class MenuScreen extends Base2DScreen{
     Vector2 velocity;
     Vector2 touch;
     Vector2 temp;
+    Sprite bg;
+    Sprite h;
 
     public MenuScreen(Game game) {
         super(game);
@@ -29,6 +32,8 @@ public class MenuScreen extends Base2DScreen{
         super.show();
         hero = new Texture("ship.png");
         backgraund = new Texture("background.jpg");
+        bg = new Sprite(new TextureRegion(backgraund));
+        h = new Sprite(new TextureRegion(hero));
         velocity = new Vector2(0,0);
         position = new Vector2(0,0);
         touch = new Vector2();
@@ -46,8 +51,8 @@ public class MenuScreen extends Base2DScreen{
             velocity.setZero();
         }
         batch.begin();
-        batch.draw(backgraund,0,0, 1024,780);
-        batch.draw(hero, position.x, position.y, 52.75f, 53f);
+        bg.draw(batch);
+        h.draw(batch);
         batch.end();
     }
 

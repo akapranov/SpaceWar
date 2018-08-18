@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.math.MatrixUtils;
 import ru.geekbrains.spacewar.math.Rect;
@@ -23,6 +25,9 @@ public class Base2DScreen implements Screen, InputProcessor{
     private Rect glBounds; // Дефолтные границы
 
     private Matrix4 worldToGl;
+    private Matrix3 screenToWorld;
+
+    private final Vector2 touch = new Vector2();
 
     public Base2DScreen(Game game){
         this.game = game;
@@ -31,7 +36,7 @@ public class Base2DScreen implements Screen, InputProcessor{
         this.worldBounds = new Rect();
         this.glBounds = new Rect(0,0, 1f, 1f);
         this.worldToGl = new Matrix4();
-
+        this.screenToWorld = new Matrix3();
     }
 
     @Override
