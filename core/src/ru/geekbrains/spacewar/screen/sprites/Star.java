@@ -21,11 +21,12 @@ public class Star extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+        checkAndHandleBounds();
     }
 
     protected void checkAndHandleBounds(){
         if (getRight() < worldBounds.getLeft())setLeft(worldBounds.getRight());
-        if (getLeft() < worldBounds.getRight())setRight(worldBounds.getLeft());
+        if (getLeft() > worldBounds.getRight())setRight(worldBounds.getLeft());
         if (getTop() < worldBounds.getBottom())setBottom(worldBounds.getTop());
 
     }
