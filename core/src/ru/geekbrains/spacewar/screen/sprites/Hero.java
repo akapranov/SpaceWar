@@ -12,11 +12,14 @@ public class Hero extends Sprite {
 
     private Vector2 v = new Vector2();
     private Rect worldBounds;
+    private Vector2 pos;
+    private Vector2 touch;
 
     public Hero(TextureAtlas atlas) {
         super(atlas.findRegion("main_ship"));
-        v.set(0 , 0);
-        setHeightProportion(0.01f);
+        v = new Vector2(0,0);
+        pos = new Vector2(0,0);
+        touch = new Vector2();
     }
 
     @Override
@@ -31,9 +34,14 @@ public class Hero extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
-        float posX = Rnd.nextFloat(worldBounds.getLeft(), worldBounds.getRight());
-        float posY = Rnd.nextFloat(worldBounds.getLeft(), worldBounds.getRight());
+        float posX = worldBounds.getHalfWidth();
+        float posY = worldBounds.getBottom();
         pos.set(posX,posY);
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
     }
 }
 
