@@ -29,6 +29,11 @@ public class Sprite extends Rect{
                 angle);
     }
 
+    public void setHeightProportion(float height){
+        setHeight(height);
+        float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
+        setWidth(height * aspect);
+    }
     public float getAngle() {
         return angle;
     }

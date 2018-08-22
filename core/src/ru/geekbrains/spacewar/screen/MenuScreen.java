@@ -28,7 +28,7 @@ public class MenuScreen extends Base2DScreen{
 
         backgraund = new Texture("background.jpg");
         bg = new Sprite(new TextureRegion(backgraund));
-        bg.setSize(1f, 1f);
+        bg.setHeightProportion(0.25f);
         }
 
     @Override
