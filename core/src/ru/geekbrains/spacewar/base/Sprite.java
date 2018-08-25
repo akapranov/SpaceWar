@@ -1,10 +1,14 @@
 package ru.geekbrains.spacewar.base;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import javax.swing.plaf.synth.Region;
+
 import ru.geekbrains.spacewar.math.Rect;
+import ru.geekbrains.spacewar.utils.Regions;
 
 public class Sprite extends Rect{
     protected float angle;
@@ -20,6 +24,9 @@ public class Sprite extends Rect{
         regions[0] = region;
     }
 
+    public Sprite(TextureRegion region, int rows, int cols, int frames){
+        this.regions = Regions.split(region,rows,cols,frames);
+    }
     public void draw(SpriteBatch batch){
         batch.draw(regions[frame],
                 getLeft(), getBottom(),
