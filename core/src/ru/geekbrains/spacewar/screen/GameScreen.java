@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
@@ -17,6 +18,7 @@ import ru.geekbrains.spacewar.screen.sprites.Star;
 public class GameScreen extends Base2DScreen {
 
     private static final int STAR_COUNT = 56;
+
     private Background background;
     private Texture bgTexture;
     private Hero hero;
@@ -91,5 +93,25 @@ public class GameScreen extends Base2DScreen {
         hero.resize(worldBounds);
     }
 
+    @Override
+    public boolean keyDown(int keycode) {
+        hero.keyDown(keycode);
+        return super.keyDown(keycode);
+    }
 
+    @Override
+    public boolean keyUp(int keycode) {
+        hero.keyUp(keycode);
+        return super.keyUp(keycode);
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        return super.touchUp(touch, pointer);
+    }
 }
