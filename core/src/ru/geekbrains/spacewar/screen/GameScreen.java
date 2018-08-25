@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
+import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.sprites.Background;
 import ru.geekbrains.spacewar.screen.gamescreen.Hero;
 import ru.geekbrains.spacewar.screen.sprites.Star;
@@ -15,6 +16,7 @@ import ru.geekbrains.spacewar.screen.sprites.Star;
 /*
  *  Экран Игры
  */
+
 public class GameScreen extends Base2DScreen {
 
     private static final int STAR_COUNT = 56;
@@ -24,6 +26,7 @@ public class GameScreen extends Base2DScreen {
     private Hero hero;
     private Star star[];
     private TextureAtlas atlas;
+    private BulletPool bulletPool = new BulletPool();
 
     public GameScreen(Game game) {
         super(game);
@@ -39,7 +42,7 @@ public class GameScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
-        hero = new Hero(atlas);
+        hero = new Hero(atlas, bulletPool);
     }
 
     @Override
@@ -58,6 +61,7 @@ public class GameScreen extends Base2DScreen {
             star[i].draw(batch);
         }
         hero.draw(batch);
+        bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -66,6 +70,7 @@ public class GameScreen extends Base2DScreen {
             star[i].update(deltaTime);
         }
         hero.update(deltaTime);
+        bulletPool.updateActiveSprites(deltaTime);
     }
 
     public void checkCollisions() {
@@ -73,7 +78,7 @@ public class GameScreen extends Base2DScreen {
     }
 
     public void deleteAllDestroyed() {
-
+       bulletPool.freeAllDestroyedActiveSprites();
     }
 
     @Override
@@ -81,6 +86,7 @@ public class GameScreen extends Base2DScreen {
         super.dispose();
         bgTexture.dispose();
         atlas.dispose();
+        bulletPool.dispose();
     }
 
     @Override

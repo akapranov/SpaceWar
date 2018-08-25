@@ -30,10 +30,10 @@ public abstract class SpritesPool<T extends Sprite> {
         }
     }
 
-    public void freeAllDestroyedActiveSprites(float delta){
+    public void freeAllDestroyedActiveSprites(){
         for (int i = 0; i < activeObjects.size(); i++) {
             T sprite = activeObjects.get(i);
-            if (!sprite.isDestroyed){
+            if (sprite.isDestroyed){
                 free(sprite);
                 i--;
                 sprite.flushDestroy();
@@ -61,5 +61,9 @@ public abstract class SpritesPool<T extends Sprite> {
     public void dispose(){
         activeObjects.clear();
         freeObjects.clear();
+    }
+
+    protected void debugLog() {
+
     }
 }

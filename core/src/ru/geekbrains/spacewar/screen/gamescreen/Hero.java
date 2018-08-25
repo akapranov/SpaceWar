@@ -6,23 +6,26 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.base.Sprite;
 import ru.geekbrains.spacewar.math.Rect;
+import ru.geekbrains.spacewar.screen.pool.BulletPool;
 
-public class Hero extends Sprite {
+public class Hero extends Ship {
 
     private static final float SHIP_HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
     private Vector2 v0 = new Vector2(0.5f, 0.0f);
 
-    private Vector2 v = new Vector2();
-    private Rect worldBounds;
-
     private boolean pressedLeft;
     private boolean pressedRight;
 
 
-    public Hero(TextureAtlas atlas) {
+    public Hero(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"),1,2,2);
         setHeightProportion(SHIP_HEIGHT);
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletHeight = 0.01f;
+        this.bulletV.set(0, 0.5f);
+        this.bulletDamage = 1;
+        this.bulletPool = bulletPool;
     }
 
     @Override
@@ -51,7 +54,8 @@ public class Hero extends Sprite {
                 moveRight();
                 break;
             case Input.Keys.UP:
-                //shoot();
+            case Input.Keys.W:
+                shoot();
                 break;
         }
     }
