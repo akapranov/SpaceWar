@@ -1,6 +1,8 @@
 package ru.geekbrains.spacewar.screen.gamescreen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,6 +16,8 @@ public class Hero extends Ship {
     private static final float BOTTOM_MARGIN = 0.05f;
     private Vector2 v0 = new Vector2(0.5f, 0.0f);
 
+    private Sound piu;
+
     private boolean pressedLeft;
     private boolean pressedRight;
 
@@ -26,6 +30,7 @@ public class Hero extends Ship {
         this.bulletV.set(0, 0.5f);
         this.bulletDamage = 1;
         this.bulletPool = bulletPool;
+        piu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
     }
 
     @Override
@@ -55,6 +60,7 @@ public class Hero extends Ship {
                 break;
             case Input.Keys.UP:
             case Input.Keys.W:
+                piu.play();
                 shoot();
                 break;
         }
