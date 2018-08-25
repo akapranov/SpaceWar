@@ -27,7 +27,8 @@ public class Hero extends Sprite {
 
     @Override
     public void resize(Rect worldBounds) {
-       setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
+        this.worldBounds = worldBounds;
+        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 
     @Override
