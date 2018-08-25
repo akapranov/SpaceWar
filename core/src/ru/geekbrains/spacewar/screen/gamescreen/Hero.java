@@ -33,6 +33,8 @@ public class Hero extends Sprite {
 
     @Override
     public void update(float delta) {
+        if(pos.x < worldBounds.getLeft())pos.x = worldBounds.getRight();
+        else if (pos.x > worldBounds.getRight())pos.x = worldBounds.getLeft();
         pos.mulAdd(v, delta);
     }
 
