@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.spacewar.base.ActionListener;
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
-import ru.geekbrains.spacewar.screen.menu.ButtonExit;
-import ru.geekbrains.spacewar.screen.menu.ButtonNewGame;
+import ru.geekbrains.spacewar.screen.menuscreen.ButtonExit;
+import ru.geekbrains.spacewar.screen.menuscreen.ButtonNewGame;
 import ru.geekbrains.spacewar.screen.sprites.Background;
 import ru.geekbrains.spacewar.screen.sprites.Star;
 

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.sprites.Background;
-import ru.geekbrains.spacewar.screen.sprites.Hero;
+import ru.geekbrains.spacewar.screen.gamescreen.Hero;
 import ru.geekbrains.spacewar.screen.sprites.Star;
 
 /*
@@ -16,11 +16,10 @@ import ru.geekbrains.spacewar.screen.sprites.Star;
  */
 public class GameScreen extends Base2DScreen {
 
-    private static final int STAR_COUNT = 150;
+    private static final int STAR_COUNT = 56;
     private Background background;
     private Texture bgTexture;
     private Hero hero;
-    private TextureAtlas gameAtlas;
     private Star star[];
     private TextureAtlas atlas;
 
@@ -33,13 +32,12 @@ public class GameScreen extends Base2DScreen {
         super.show();
         bgTexture = new Texture("textures/background.jpg");
         background = new Background(new TextureRegion(bgTexture));
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         star = new Star[STAR_COUNT];
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
-        gameAtlas = new TextureAtlas("textures/mainAtlas.tpack");
-        hero = new Hero(gameAtlas);
+        hero = new Hero(atlas);
     }
 
     @Override
@@ -81,7 +79,6 @@ public class GameScreen extends Base2DScreen {
         super.dispose();
         bgTexture.dispose();
         atlas.dispose();
-        gameAtlas.dispose();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.geekbrains.spacewar.screen.sprites;
+package ru.geekbrains.spacewar.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -8,13 +8,15 @@ import ru.geekbrains.spacewar.math.Rect;
 
 public class Hero extends Sprite {
 
+    private static final float SHIP_HEIGHT = 0.15f;
+
     private Vector2 v = new Vector2();
     private Rect worldBounds;
     //private Vector2 touch;
 
     public Hero(TextureAtlas atlas) {
         super(atlas.findRegion("main_ship"),1,2,2);
-        v.set(0,0);
+        setHeightProportion(SHIP_HEIGHT);
         //touch = new Vector2();
     }
 
