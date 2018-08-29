@@ -37,6 +37,7 @@ public class GameScreen extends Base2DScreen {
     private Sound heroPiu;
 
     private ExplosionPool explosionPool;
+    private Sound explosionSound;
 
     public GameScreen(Game game) {
         super(game);
@@ -61,7 +62,8 @@ public class GameScreen extends Base2DScreen {
         heroPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
         hero = new Hero(atlas, bulletPool, heroPiu);
 
-        explosionPool = new ExplosionPool(atlas);
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        explosionPool = new ExplosionPool(atlas, explosionSound);
     }
 
     @Override
@@ -85,13 +87,13 @@ public class GameScreen extends Base2DScreen {
         batch.end();
     }
 
-    public void update(float deltaTime) {
+    public void update(float delta) {
         for (int i = 0; i < star.length; i++) {
-            star[i].update(deltaTime);
+            star[i].update(delta);
         }
-        hero.update(deltaTime);
-        bulletPool.updateActiveSprites(deltaTime);
-        explosionPool.updateActiveSprites(deltaTime);
+        hero.update(delta);
+        bulletPool.updateActiveSprites(delta);
+        explosionPool.updateActiveSprites(delta);
     }
 
     public void checkCollisions() {
@@ -112,6 +114,7 @@ public class GameScreen extends Base2DScreen {
         explosionPool.dispose();
         music.dispose();
         heroPiu.dispose();
+        explosionSound.dispose();
     }
 
     @Override
