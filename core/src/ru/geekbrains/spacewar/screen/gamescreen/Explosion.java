@@ -1,6 +1,7 @@
 package ru.geekbrains.spacewar.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.base.Sprite;
 
@@ -13,9 +14,13 @@ public class Explosion extends Sprite {
         super(region, rows, cols, frames);
     }
 
+    public void set (float height, Vector2 position){
+        this.pos.set(position);
+        setHeightProportion(height);
+    }
+
     @Override
     public void update(float delta) {
-        super.update(delta);
         animateInterval += delta;
         if (animateTimer >= animateInterval){
             animateTimer = 0f;
