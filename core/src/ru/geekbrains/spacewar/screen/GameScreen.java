@@ -1,6 +1,8 @@
 package ru.geekbrains.spacewar.screen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,6 +30,8 @@ public class GameScreen extends Base2DScreen {
     private TextureAtlas atlas;
     private BulletPool bulletPool = new BulletPool();
 
+    private Music music;
+
     public GameScreen(Game game) {
         super(game);
     }
@@ -43,6 +47,9 @@ public class GameScreen extends Base2DScreen {
             star[i] = new Star(atlas);
         }
         hero = new Hero(atlas, bulletPool);
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
