@@ -40,9 +40,18 @@ public class Hero extends Ship {
 
     @Override
     public void update(float delta) {
-        if(pos.x < worldBounds.getLeft())pos.x = worldBounds.getRight();
-        else if (pos.x > worldBounds.getRight())pos.x = worldBounds.getLeft();
         pos.mulAdd(v, delta);
+
+
+        if(pos.x < worldBounds.getLeft()){
+            pos.x = worldBounds.getRight();
+            stop();
+        }
+        else if (pos.x > worldBounds.getRight()){
+            pos.x = worldBounds.getLeft();
+            stop();
+        }
+
     }
 
     public void keyDown(int keycode) {

@@ -13,10 +13,12 @@ import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.gamescreen.Explosion;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
+import ru.geekbrains.spacewar.screen.pool.EnemyPool;
 import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
 import ru.geekbrains.spacewar.screen.sprites.Background;
 import ru.geekbrains.spacewar.screen.gamescreen.Hero;
 import ru.geekbrains.spacewar.screen.sprites.Star;
+import ru.geekbrains.spacewar.utils.EnemyEmitter;
 
 /*
  *  Экран Игры
@@ -35,9 +37,13 @@ public class GameScreen extends Base2DScreen {
 
     private Music music;
     private Sound heroPiu;
+    private Sound enemyPiu;
 
     private ExplosionPool explosionPool;
     private Sound explosionSound;
+
+    private EnemyPool enemyPool;
+    private EnemyEmitter enemyEmitter;
 
     public GameScreen(Game game) {
         super(game);
@@ -51,7 +57,6 @@ public class GameScreen extends Base2DScreen {
         music.setLooping(true);
         music.play();
 
-
         bgTexture = new Texture("textures/background.jpg");
         background = new Background(new TextureRegion(bgTexture));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
@@ -60,10 +65,13 @@ public class GameScreen extends Base2DScreen {
             star[i] = new Star(atlas);
         }
         heroPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
+        enemyPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         hero = new Hero(atlas, bulletPool, heroPiu);
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(atlas, explosionSound);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hero, enemyPiu);
+        enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
     }
 
     @Override
@@ -84,6 +92,7 @@ public class GameScreen extends Base2DScreen {
         hero.draw(batch);
         bulletPool.drawActiveSprites(batch);
         explosionPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -94,6 +103,8 @@ public class GameScreen extends Base2DScreen {
         hero.update(delta);
         bulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
+        enemyEmitter.generateEnemies(delta);
     }
 
     public void checkCollisions() {
@@ -103,6 +114,7 @@ public class GameScreen extends Base2DScreen {
     public void deleteAllDestroyed() {
        bulletPool.freeAllDestroyedActiveSprites();
        explosionPool.freeAllDestroyedActiveSprites();
+       enemyPool.freeAllDestroyedActiveSprites();
     }
 
     @Override
@@ -113,8 +125,10 @@ public class GameScreen extends Base2DScreen {
         bulletPool.dispose();
         explosionPool.dispose();
         music.dispose();
+        enemyPiu.dispose();
         heroPiu.dispose();
         explosionSound.dispose();
+
     }
 
     @Override
@@ -142,8 +156,6 @@ public class GameScreen extends Base2DScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
         hero.touchDown(touch, pointer);
-        Explosion explosion = explosionPool.obtain();
-        explosion.set(0.2f, touch);
         return super.touchDown(touch, pointer);
     }
 

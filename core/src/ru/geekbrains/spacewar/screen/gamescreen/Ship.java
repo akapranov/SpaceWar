@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.spacewar.base.Sprite;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
+import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
 
 public class Ship extends Sprite {
 
@@ -17,10 +18,23 @@ public class Ship extends Sprite {
 
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
+    protected ExplosionPool explosionPool;
+
+    protected int hp;
+
+    protected float reloadInterval;
+    protected float reloadTimer;
 
     protected Vector2 bulletV = new Vector2();
     protected float bulletHeight;
     protected int bulletDamage;
+
+    public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Sound sound, Rect worldBounds) {
+        this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
+        this.sound = sound;
+        this.worldBounds = worldBounds;
+    }
 
     public Ship(TextureRegion region, int rows, int cols, int frames, Sound sound) {
         super(region, rows, cols, frames);
@@ -36,5 +50,10 @@ public class Ship extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, bulletDamage);
         sound.play();
+    }
+
+    public void boom(){
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), pos);
     }
 }
