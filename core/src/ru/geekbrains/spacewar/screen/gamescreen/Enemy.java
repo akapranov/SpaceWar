@@ -15,14 +15,15 @@ public class Enemy extends Ship {
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPooll, Sound piu, Hero hero, Rect worldBounds) {
         super(bulletPool,explosionPooll, piu, worldBounds);
+
         this.hero = hero;
         this.v.set(v0);
-        this.reloadInterval = 0.4f;
+        this.reloadInterval = 0.2f;
     }
 
     @Override
     public void update(float delta) {
-        super.update(delta);
+        //super.update(delta);
         pos.mulAdd(v, delta);
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval){
