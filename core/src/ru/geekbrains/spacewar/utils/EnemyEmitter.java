@@ -10,8 +10,8 @@ import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
 
 public class EnemyEmitter {
-    private static final float ENEMY_SMALL_HEIGHT = 0.1f;
-    private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.01f;
+    private float ENEMY_HEIGHT;
+    private float ENEMY_BULLET_HEIGHT;
     private static final float ENEMY_SMALL_BULLET_VY = -0.3f;
     private static final int ENEMY_SMALL_BULLET_DAMAGE = 1;
     private static final float ENEMY_SMALL_RELOAD_INTERVAL = 3f;
@@ -56,11 +56,11 @@ public class EnemyEmitter {
                     enemySmallRegion,
                     enemySmallV,
                     bulletRegion,
-                    ENEMY_SMALL_BULLET_HEIGHT,
+                    ENEMY_BULLET_HEIGHT  = 0.01f,
                     ENEMY_SMALL_BULLET_VY,
                     ENEMY_SMALL_BULLET_DAMAGE,
                     ENEMY_SMALL_RELOAD_INTERVAL,
-                    ENEMY_SMALL_HEIGHT,
+                    ENEMY_HEIGHT = 0.1f,
                     ENEMY_SMALL_HP
             );
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
@@ -72,11 +72,11 @@ public class EnemyEmitter {
                         enemyMiddleRegion,
                         enemySmallV,
                         bulletRegion,
-                        ENEMY_SMALL_BULLET_HEIGHT,
+                        ENEMY_BULLET_HEIGHT = 0.015f,
                         ENEMY_SMALL_BULLET_VY,
                         ENEMY_SMALL_BULLET_DAMAGE,
                         ENEMY_SMALL_RELOAD_INTERVAL,
-                        ENEMY_SMALL_HEIGHT,
+                        ENEMY_HEIGHT = 0.13f,
                         ENEMY_SMALL_HP
                 );
                 enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
@@ -88,11 +88,11 @@ public class EnemyEmitter {
                         enemyBigRegion,
                         enemySmallV,
                         bulletRegion,
-                        ENEMY_SMALL_BULLET_HEIGHT,
+                        ENEMY_BULLET_HEIGHT = 0.02f,
                         ENEMY_SMALL_BULLET_VY,
                         ENEMY_SMALL_BULLET_DAMAGE,
                         ENEMY_SMALL_RELOAD_INTERVAL,
-                        ENEMY_SMALL_HEIGHT,
+                        ENEMY_HEIGHT = 0.16f,
                         ENEMY_SMALL_HP
                 );
                 enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
