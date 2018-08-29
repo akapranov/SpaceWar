@@ -46,7 +46,7 @@ public class GameScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
-        hero = new Hero(atlas, bulletPool);
+        hero = new Hero(atlas, bulletPool, Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav")));
         this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();

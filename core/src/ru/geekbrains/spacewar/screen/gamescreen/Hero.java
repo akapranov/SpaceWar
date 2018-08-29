@@ -25,7 +25,7 @@ public class Hero extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public Hero(TextureAtlas atlas, BulletPool bulletPool) {
+    public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu) {
         super(atlas.findRegion("main_ship"),1,2,2);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
@@ -33,7 +33,7 @@ public class Hero extends Ship {
         this.bulletV.set(0, 0.5f);
         this.bulletDamage = 1;
         this.bulletPool = bulletPool;
-        piu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
+        this.piu = piu;
     }
 
     @Override
