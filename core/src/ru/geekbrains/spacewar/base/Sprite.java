@@ -28,11 +28,6 @@ public class Sprite extends Rect{
 
     }
 
-    public Sprite(TextureRegion region, int rows, int cols, int frames, Sound sound){
-        this.regions = Regions.split(region,rows,cols,frames);
-        this.sound = sound;
-    }
-
     public Sprite(TextureRegion region, int rows, int cols, int frames){
         this.regions = Regions.split(region,rows,cols,frames);
     }
