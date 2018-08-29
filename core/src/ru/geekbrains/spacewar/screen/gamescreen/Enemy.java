@@ -18,12 +18,12 @@ public class Enemy extends Ship {
 
         this.hero = hero;
         this.v.set(v0);
-        this.reloadInterval = 0.2f;
+        this.reloadInterval = 0.1f;
     }
 
     @Override
     public void update(float delta) {
-        //super.update(delta);
+        super.update(delta);
         pos.mulAdd(v, delta);
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval){
@@ -56,5 +56,6 @@ public class Enemy extends Ship {
         this.hp = hp;
         setHeightProportion(height);
         v.set(v0);
+        //reloadTimer = reloadInterval;
     }
 }

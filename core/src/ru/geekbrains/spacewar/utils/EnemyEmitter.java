@@ -23,6 +23,8 @@ public class EnemyEmitter {
     private float generateTimer;
 
     private TextureRegion[] enemySmallRegion;
+    private TextureRegion[] enemyMiddleRegion;
+    private TextureRegion[] enemyBigRegion;
 
     private Vector2 enemySmallV = new Vector2(0f, -0.2f);
 
@@ -34,7 +36,11 @@ public class EnemyEmitter {
         this.enemyPool = enemyPool;
 
         TextureRegion textureRegion0 = atlas.findRegion("enemy0");
+        TextureRegion textureRegion1 = atlas.findRegion("enemy1");
+        TextureRegion textureRegion2 = atlas.findRegion("enemy2");
         this.enemySmallRegion = Regions.split(textureRegion0, 1, 2,2);
+        this.enemyMiddleRegion = Regions.split(textureRegion1, 1, 2,2);
+        this.enemyBigRegion = Regions.split(textureRegion2, 1, 2,2);
         this.bulletRegion = atlas.findRegion("bulletEnemy");
     }
 
@@ -42,7 +48,10 @@ public class EnemyEmitter {
         generateTimer += delta;
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
-            Enemy enemy = enemyPool.obtain();
+            float tmp = Rnd.nextFloat(0,3);
+            if (tmp < 1.f){
+                Enemy enemy = enemyPool.obtain();
+
             enemy.set(
                     enemySmallRegion,
                     enemySmallV,
@@ -56,6 +65,39 @@ public class EnemyEmitter {
             );
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
+            } else if (tmp < 2.f && tmp >= 1.f){
+                Enemy enemy = enemyPool.obtain();
+
+                enemy.set(
+                        enemyMiddleRegion,
+                        enemySmallV,
+                        bulletRegion,
+                        ENEMY_SMALL_BULLET_HEIGHT,
+                        ENEMY_SMALL_BULLET_VY,
+                        ENEMY_SMALL_BULLET_DAMAGE,
+                        ENEMY_SMALL_RELOAD_INTERVAL,
+                        ENEMY_SMALL_HEIGHT,
+                        ENEMY_SMALL_HP
+                );
+                enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
+                enemy.setBottom(worldBounds.getTop());
+            }else if (tmp < 3.f && tmp >= 2.f){
+                Enemy enemy = enemyPool.obtain();
+
+                enemy.set(
+                        enemyBigRegion,
+                        enemySmallV,
+                        bulletRegion,
+                        ENEMY_SMALL_BULLET_HEIGHT,
+                        ENEMY_SMALL_BULLET_VY,
+                        ENEMY_SMALL_BULLET_DAMAGE,
+                        ENEMY_SMALL_RELOAD_INTERVAL,
+                        ENEMY_SMALL_HEIGHT,
+                        ENEMY_SMALL_HP
+                );
+                enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
+                enemy.setBottom(worldBounds.getTop());
+            }
         }
     }
 }

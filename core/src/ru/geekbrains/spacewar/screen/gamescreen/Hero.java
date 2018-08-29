@@ -41,8 +41,6 @@ public class Hero extends Ship {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
-
-
         if(pos.x < worldBounds.getLeft()){
             pos.x = worldBounds.getRight();
             stop();
