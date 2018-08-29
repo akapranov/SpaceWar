@@ -1,5 +1,6 @@
 package ru.geekbrains.spacewar.screen.gamescreen;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,6 +13,8 @@ public class Ship extends Sprite {
     protected Vector2 v = new Vector2();
     protected Rect worldBounds;
 
+    protected Sound sound;
+
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
 
@@ -19,8 +22,9 @@ public class Ship extends Sprite {
     protected float bulletHeight;
     protected int bulletDamage;
 
-    public Ship(TextureRegion region, int rows, int cols, int frames) {
+    public Ship(TextureRegion region, int rows, int cols, int frames, Sound sound) {
         super(region, rows, cols, frames);
+        this.sound = sound;
     }
 
     @Override
@@ -31,5 +35,6 @@ public class Ship extends Sprite {
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, bulletDamage);
+        sound.play();
     }
 }

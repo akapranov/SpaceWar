@@ -26,7 +26,7 @@ public class Hero extends Ship {
     private int rightPointer = INVALID_POINTER;
 
     public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu) {
-        super(atlas.findRegion("main_ship"),1,2,2);
+        super(atlas.findRegion("main_ship"),1,2,2, piu);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletHeight = 0.01f;
@@ -63,7 +63,6 @@ public class Hero extends Ship {
                 break;
             case Input.Keys.UP:
             case Input.Keys.W:
-                piu.play();
                 shoot();
                 break;
         }
