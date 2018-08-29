@@ -97,6 +97,8 @@ public class GameScreen extends Base2DScreen {
         bgTexture.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        music.dispose();
+        heroPiu.dispose();
     }
 
     @Override
