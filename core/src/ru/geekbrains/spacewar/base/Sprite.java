@@ -1,5 +1,6 @@
 package ru.geekbrains.spacewar.base;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,6 +17,7 @@ public class Sprite extends Rect{
     protected TextureRegion[] regions;
     protected int frame;
     protected boolean isDestroyed = false;
+    protected Sound sound;
 
     public Sprite(TextureRegion region){
         if (region == null) {
@@ -23,6 +25,7 @@ public class Sprite extends Rect{
         }
         regions = new TextureRegion[1];
         regions[0] = region;
+
     }
 
     public Sprite(TextureRegion region, int rows, int cols, int frames){

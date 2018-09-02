@@ -1,12 +1,10 @@
 package ru.geekbrains.spacewar.screen.gamescreen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrains.spacewar.base.Sprite;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 
@@ -14,23 +12,24 @@ public class Hero extends Ship {
 
     private static final float SHIP_HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
-    private Vector2 v0 = new Vector2(0.5f, 0.0f);
+    private static final int INVALID_POINTER = -1;
 
-    private Sound piu;
+    private Vector2 v0 = new Vector2(0.5f, 0.0f);
 
     private boolean pressedLeft;
     private boolean pressedRight;
 
+    private int leftPointer = INVALID_POINTER;
+    private int rightPointer = INVALID_POINTER;
 
-    public Hero(TextureAtlas atlas, BulletPool bulletPool) {
-        super(atlas.findRegion("main_ship"),1,2,2);
+    public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu) {
+        super(atlas.findRegion("main_ship"),1,2,2, piu);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletHeight = 0.01f;
         this.bulletV.set(0, 0.5f);
         this.bulletDamage = 1;
         this.bulletPool = bulletPool;
-        piu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
     }
 
     @Override
@@ -41,9 +40,16 @@ public class Hero extends Ship {
 
     @Override
     public void update(float delta) {
-        if(pos.x < worldBounds.getLeft())pos.x = worldBounds.getRight();
-        else if (pos.x > worldBounds.getRight())pos.x = worldBounds.getLeft();
         pos.mulAdd(v, delta);
+        if(pos.x < worldBounds.getLeft()){
+            pos.x = worldBounds.getRight();
+            stop();
+        }
+        else if (pos.x > worldBounds.getRight()){
+            pos.x = worldBounds.getLeft();
+            stop();
+        }
+
     }
 
     public void keyDown(int keycode) {
@@ -60,7 +66,6 @@ public class Hero extends Ship {
                 break;
             case Input.Keys.UP:
             case Input.Keys.W:
-                piu.play();
                 shoot();
                 break;
         }
@@ -99,8 +104,12 @@ public class Hero extends Ship {
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
         if (touch.x < worldBounds.pos.x) {
+            if (leftPointer != INVALID_POINTER)return false;
+            leftPointer = pointer;
             moveLeft();
         } else {
+            if (rightPointer != INVALID_POINTER)return false;
+            rightPointer = pointer;
             moveRight();
         }
         return false;
@@ -108,7 +117,21 @@ public class Hero extends Ship {
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        stop();
+        if (pointer == leftPointer){
+            leftPointer = INVALID_POINTER;
+            if (rightPointer != INVALID_POINTER){
+                moveRight();
+            }else{
+                stop();
+            }
+        }else if (pointer == rightPointer){
+            rightPointer = INVALID_POINTER;
+            if (leftPointer != INVALID_POINTER){
+                moveLeft();
+            }else{
+                stop();
+            }
+        }
         return false;
     }
 
