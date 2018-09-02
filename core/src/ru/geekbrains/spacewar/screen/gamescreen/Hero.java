@@ -2,6 +2,7 @@ package ru.geekbrains.spacewar.screen.gamescreen;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -27,10 +28,16 @@ public class Hero extends Ship {
         super(atlas.findRegion("main_ship"),explosionPool,1,2,2, piu);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletPool = bulletPool;
+    }
+
+    public void startNewGame() {
         this.bulletHeight = 0.01f;
         this.bulletV.set(0, 0.5f);
-        this.bulletDamage = 1;
-        this.bulletPool = bulletPool;
+        this.bulletDamage = 100;
+        this.reloadInterval = 0.4f;
+        this.hp = 1;
+        flushDestroy();
     }
 
     @Override
@@ -43,6 +50,11 @@ public class Hero extends Ship {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            reloadTimer = 0f;
+            shoot();
+        }
         if(pos.x < worldBounds.getLeft()){
             pos.x = worldBounds.getRight();
             stop();
@@ -141,10 +153,10 @@ public class Hero extends Ship {
     }
 
     public boolean isBulletCollision(Rect bullet) {
-        return !(bullet.getRight()< getLeft())
-                || (bullet.getLeft() > getRight())
-                || (bullet.getBottom() > pos.y)
-                || (bullet.getTop() < getBottom());
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom());
     }
 }
 

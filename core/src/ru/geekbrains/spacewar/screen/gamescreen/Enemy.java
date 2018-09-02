@@ -83,9 +83,9 @@ public class Enemy extends Ship {
     }
 
     public boolean isBulletCollision(Rect bullet) {
-        return !(bullet.getRight() < getLeft())
-                || (bullet.getLeft() > getRight())
-                || (bullet.getBottom() > getTop())
-                || (bullet.getTop() < pos.y);
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y);
     }
 }

@@ -16,6 +16,7 @@ import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
 import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
 import ru.geekbrains.spacewar.screen.gamescreen.Explosion;
+import ru.geekbrains.spacewar.screen.gamescreen.MessageGameOver;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
 import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
@@ -30,8 +31,12 @@ import ru.geekbrains.spacewar.utils.EnemyEmitter;
 
 public class GameScreen extends Base2DScreen {
 
+    private enum State {PLAYING, GAME_OVER}
+
     private static final int STAR_COUNT = 56;
 
+    private State state;
+    private MessageGameOver messageGameOver;
     private Background background;
     private Texture bgTexture;
     private Hero hero;
@@ -75,6 +80,8 @@ public class GameScreen extends Base2DScreen {
         hero = new Hero(atlas, bulletPool, heroPiu, explosionPool);
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hero, enemyPiu);
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
+        messageGameOver = new MessageGameOver(atlas);
+        startNewGame();
     }
 
     @Override
@@ -96,6 +103,10 @@ public class GameScreen extends Base2DScreen {
         bulletPool.drawActiveSprites(batch);
         explosionPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
+        if (state == State.GAME_OVER) {
+            messageGameOver.draw(batch);
+            //buttonNewGame.draw(batch);
+        }
         batch.end();
     }
 
@@ -103,11 +114,16 @@ public class GameScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i].update(delta);
         }
-        hero.update(delta);
-        bulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemyEmitter.generateEnemies(delta);
+        switch (state){
+            case PLAYING:
+                hero.update(delta);
+                bulletPool.updateActiveSprites(delta);
+                enemyPool.updateActiveSprites(delta);
+                enemyEmitter.generateEnemies(delta);
+            case GAME_OVER:
+                break;
+        }
     }
 
     public void checkCollisions() {
@@ -120,7 +136,7 @@ public class GameScreen extends Base2DScreen {
             if (enemy.pos.dst2(hero.pos) < minDist * minDist) {
                 enemy.destroy();
                 hero.destroy();
-                //state = State.GAME_OVER;
+                state = State.GAME_OVER;
                 return;
             }
         }
@@ -151,9 +167,9 @@ public class GameScreen extends Base2DScreen {
             if (hero.isBulletCollision(bullet)) {
                 hero.damage(bullet.getDamage());
                 bullet.destroy();
-                //if (hero.isDestroyed()) {
-                  //  state = State.GAME_OVER;
-                //}
+                if (hero.isDestroyed()) {
+                    state = State.GAME_OVER;
+                }
             }
         }
     }
@@ -209,5 +225,17 @@ public class GameScreen extends Base2DScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         hero.touchUp(touch, pointer);
         return super.touchUp(touch, pointer);
+    }
+    private void startNewGame() {
+        state = State.PLAYING;
+
+        //frags = 0;
+
+        hero.startNewGame();
+        //enemyEmitter.startNewGame();
+
+        bulletPool.freeAllActiveObjects();
+        enemyPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
     }
 }
