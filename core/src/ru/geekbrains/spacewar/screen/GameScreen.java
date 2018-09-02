@@ -9,8 +9,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
+import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
+import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
 import ru.geekbrains.spacewar.screen.gamescreen.Explosion;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
@@ -66,10 +70,9 @@ public class GameScreen extends Base2DScreen {
         }
         heroPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
         enemyPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        hero = new Hero(atlas, bulletPool, heroPiu);
-
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(atlas, explosionSound);
+        hero = new Hero(atlas, bulletPool, heroPiu, explosionPool);
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hero, enemyPiu);
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
     }
@@ -108,7 +111,51 @@ public class GameScreen extends Base2DScreen {
     }
 
     public void checkCollisions() {
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + hero.getHalfWidth();
+            if (enemy.pos.dst2(hero.pos) < minDist * minDist) {
+                enemy.destroy();
+                hero.destroy();
+                //state = State.GAME_OVER;
+                return;
+            }
+        }
 
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            for (Bullet bullet : bulletList) {
+                if (bullet.getOwner() != hero || bullet.isDestroyed()) {
+                    continue;
+                }
+                if (enemy.isBulletCollision(bullet)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.destroy();
+                    //if (enemy.isDestroyed()) {
+                     //   frags++;
+                    //    break;
+                    //}
+                }
+            }
+        }
+        for (Bullet bullet : bulletList) {
+            if (bullet.isDestroyed() || bullet.getOwner() == hero) {
+                continue;
+            }
+            if (hero.isBulletCollision(bullet)) {
+                hero.damage(bullet.getDamage());
+                bullet.destroy();
+                //if (hero.isDestroyed()) {
+                  //  state = State.GAME_OVER;
+                //}
+            }
+        }
     }
 
     public void deleteAllDestroyed() {
@@ -128,7 +175,6 @@ public class GameScreen extends Base2DScreen {
         enemyPiu.dispose();
         heroPiu.dispose();
         explosionSound.dispose();
-
     }
 
     @Override

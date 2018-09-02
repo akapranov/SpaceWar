@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
+import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
 
 public class Hero extends Ship {
 
@@ -22,8 +23,8 @@ public class Hero extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu) {
-        super(atlas.findRegion("main_ship"),1,2,2, piu);
+    public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu, ExplosionPool explosionPool) {
+        super(atlas.findRegion("main_ship"),explosionPool,1,2,2, piu);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletHeight = 0.01f;
@@ -40,6 +41,7 @@ public class Hero extends Ship {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.mulAdd(v, delta);
         if(pos.x < worldBounds.getLeft()){
             pos.x = worldBounds.getRight();
@@ -49,7 +51,6 @@ public class Hero extends Ship {
             pos.x = worldBounds.getLeft();
             stop();
         }
-
     }
 
     public void keyDown(int keycode) {
@@ -137,6 +138,13 @@ public class Hero extends Ship {
 
     private void stop() {
         v.setZero();
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight()< getLeft())
+                || (bullet.getLeft() > getRight())
+                || (bullet.getBottom() > pos.y)
+                || (bullet.getTop() < getBottom());
     }
 }
 

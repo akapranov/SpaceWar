@@ -11,6 +11,10 @@ import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
 
 public class Ship extends Sprite {
 
+
+    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
+    private float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
+
     protected Vector2 v = new Vector2();
     protected Rect worldBounds;
 
@@ -36,8 +40,9 @@ public class Ship extends Sprite {
         this.worldBounds = worldBounds;
     }
 
-    public Ship(TextureRegion region, int rows, int cols, int frames, Sound sound) {
+    public Ship(TextureRegion region,ExplosionPool explosionPool, int rows, int cols, int frames, Sound sound) {
         super(region, rows, cols, frames);
+        this.explosionPool = explosionPool;
         this.sound = sound;
     }
 
@@ -57,6 +62,27 @@ public class Ship extends Sprite {
         explosion.set(getHeight(), pos);
     }
 
-    public void damage(int bulletDamage) {
+    public void damage(int damage) {
+        frame = 1;
+        damageAnimateTimer = 0f;
+        hp -= damage;
+        if (hp <= 0){
+            destroy();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        boom();
+        super.destroy();
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
+            frame = 0;
+        }
     }
 }
