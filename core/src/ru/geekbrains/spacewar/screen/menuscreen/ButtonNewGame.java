@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import ru.geekbrains.spacewar.base.ActionListener;
 import ru.geekbrains.spacewar.base.ScaledTouchUpButton;
 import ru.geekbrains.spacewar.math.Rect;
+import ru.geekbrains.spacewar.screen.GameScreen;
 
 public class ButtonNewGame extends ScaledTouchUpButton {
 

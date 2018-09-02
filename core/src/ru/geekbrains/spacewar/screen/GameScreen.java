@@ -11,11 +11,12 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
 
+import ru.geekbrains.spacewar.base.ActionListener;
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
+import ru.geekbrains.spacewar.screen.gamescreen.ButtonNewGame;
 import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
-import ru.geekbrains.spacewar.screen.gamescreen.Explosion;
 import ru.geekbrains.spacewar.screen.gamescreen.MessageGameOver;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
@@ -29,7 +30,13 @@ import ru.geekbrains.spacewar.utils.EnemyEmitter;
  *  Экран Игры
  */
 
-public class GameScreen extends Base2DScreen {
+public class GameScreen extends Base2DScreen implements ActionListener {
+
+    @Override
+    public void actionPerformed(Object src) {
+        if (src == buttonNewGame)
+            startNewGame();
+    }
 
     private enum State {PLAYING, GAME_OVER}
 
@@ -37,6 +44,7 @@ public class GameScreen extends Base2DScreen {
 
     private State state;
     private MessageGameOver messageGameOver;
+    int frags;
     private Background background;
     private Texture bgTexture;
     private Hero hero;
@@ -53,6 +61,8 @@ public class GameScreen extends Base2DScreen {
 
     private EnemyPool enemyPool;
     private EnemyEmitter enemyEmitter;
+
+    private ButtonNewGame buttonNewGame;
 
     public GameScreen(Game game) {
         super(game);
@@ -81,6 +91,7 @@ public class GameScreen extends Base2DScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hero, enemyPiu);
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
         messageGameOver = new MessageGameOver(atlas);
+        buttonNewGame = new ButtonNewGame(atlas,  this);
         startNewGame();
     }
 
@@ -105,12 +116,15 @@ public class GameScreen extends Base2DScreen {
         enemyPool.drawActiveSprites(batch);
         if (state == State.GAME_OVER) {
             messageGameOver.draw(batch);
-            //buttonNewGame.draw(batch);
+            buttonNewGame.draw(batch);
         }
         batch.end();
     }
 
     public void update(float delta) {
+        if (hero.isDestroyed()) {
+            state = State.GAME_OVER;
+        }
         for (int i = 0; i < star.length; i++) {
             star[i].update(delta);
         }
@@ -153,10 +167,10 @@ public class GameScreen extends Base2DScreen {
                 if (enemy.isBulletCollision(bullet)) {
                     enemy.damage(bullet.getDamage());
                     bullet.destroy();
-                    //if (enemy.isDestroyed()) {
-                     //   frags++;
-                    //    break;
-                    //}
+                    if (enemy.isDestroyed()) {
+                        frags++;
+                        break;
+                    }
                 }
             }
         }
@@ -218,21 +232,22 @@ public class GameScreen extends Base2DScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
         hero.touchDown(touch, pointer);
+        buttonNewGame.touchDown(touch, pointer);
         return super.touchDown(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
         hero.touchUp(touch, pointer);
+        buttonNewGame.touchUp(touch, pointer);
         return super.touchUp(touch, pointer);
     }
     private void startNewGame() {
         state = State.PLAYING;
 
-        //frags = 0;
+        frags = 0;
 
         hero.startNewGame();
-        //enemyEmitter.startNewGame();
 
         bulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
