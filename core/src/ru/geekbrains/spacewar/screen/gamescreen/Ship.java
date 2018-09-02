@@ -56,4 +56,7 @@ public class Ship extends Sprite {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);
     }
+
+    public void damage(int bulletDamage) {
+    }
 }
