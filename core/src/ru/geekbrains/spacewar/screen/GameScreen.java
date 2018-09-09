@@ -150,7 +150,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
                 hero.update(delta);
                 bulletPool.updateActiveSprites(delta);
                 enemyPool.updateActiveSprites(delta);
-                enemyEmitter.generateEnemies(delta);
+                enemyEmitter.generateEnemies(delta, frags);
             case GAME_OVER:
                 break;
         }
@@ -274,6 +274,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         frags = 0;
 
         hero.startNewGame();
+        enemyEmitter.startNewGame();
 
         bulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
@@ -286,6 +287,6 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         sbLevel.setLength(0);
         font.draw(batch,sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + 0.02f, worldBounds.getTop() - 0.02f);
         font.draw(batch,sbHP.append(HP).append(hero.getHp()), worldBounds.pos.x, worldBounds.getTop() - 0.02f, Align.center);
-        font.draw(batch,sbLevel.append(LEVEL).append(1), worldBounds.getRight()- 0.02f, worldBounds.getTop() - 0.02f, Align.right );
+        font.draw(batch,sbLevel.append(LEVEL).append(enemyEmitter.getLevel()), worldBounds.getRight()- 0.02f, worldBounds.getTop() - 0.02f, Align.right );
     }
 }
