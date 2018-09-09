@@ -10,6 +10,10 @@ import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
+    private enum State{ DESCENT, FIGHT}
+    private State state;
+    private Vector2 descentV = new Vector2(0f, -0.15f);
+
     private Hero hero;
     private Vector2 v0 = new Vector2();
 
@@ -31,8 +35,26 @@ public class Enemy extends Ship {
             shoot();
         }
         if (getBottom() < worldBounds.getBottom()){
-            boom();
             destroy();
+        }
+        switch (state) {
+            case DESCENT:
+                if (getTop() <= worldBounds.getTop()) {
+                    v.set(v0);
+                    state = State.FIGHT;
+                }
+                break;
+            case FIGHT:
+                reloadTimer += delta;
+                if (reloadTimer >= reloadInterval) {
+                    reloadTimer = 0f;
+                    shoot();
+                }
+                if (getBottom() < worldBounds.getBottom()) {
+                    hero.damage(bulletDamage);
+                    destroy();
+                }
+                break;
         }
     }
 
@@ -55,7 +77,15 @@ public class Enemy extends Ship {
         this.reloadInterval = reloadInterval;
         this.hp = hp;
         setHeightProportion(height);
-        v.set(v0);
-        //reloadTimer = reloadInterval;
+        v.set(descentV);
+        reloadTimer = reloadInterval;
+        state = State.DESCENT;
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y);
     }
 }

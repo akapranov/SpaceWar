@@ -45,6 +45,11 @@ public abstract class SpritesPool<T extends Sprite> {
         if (activeObjects.remove(object)) freeObjects.add(object);
     }
 
+    public void freeAllActiveObjects() {
+        freeObjects.addAll(activeObjects);
+        activeObjects.clear();
+    }
+
     public void drawActiveSprites(SpriteBatch spriteBatch){
         for (int i = 0; i < activeObjects.size(); i++) {
             Sprite sprite = activeObjects.get(i);

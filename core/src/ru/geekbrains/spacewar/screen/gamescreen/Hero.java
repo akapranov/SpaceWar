@@ -2,11 +2,13 @@ package ru.geekbrains.spacewar.screen.gamescreen;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
+import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
 
 public class Hero extends Ship {
 
@@ -22,14 +24,20 @@ public class Hero extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu) {
-        super(atlas.findRegion("main_ship"),1,2,2, piu);
+    public Hero(TextureAtlas atlas, BulletPool bulletPool, Sound piu, ExplosionPool explosionPool) {
+        super(atlas.findRegion("main_ship"),explosionPool,1,2,2, piu);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletPool = bulletPool;
+    }
+
+    public void startNewGame() {
         this.bulletHeight = 0.01f;
         this.bulletV.set(0, 0.5f);
         this.bulletDamage = 1;
-        this.bulletPool = bulletPool;
+        this.reloadInterval = 0.8f;
+        this.hp = 100;
+        flushDestroy();
     }
 
     @Override
@@ -40,7 +48,13 @@ public class Hero extends Ship {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.mulAdd(v, delta);
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            reloadTimer = 0f;
+            shoot();
+        }
         if(pos.x < worldBounds.getLeft()){
             pos.x = worldBounds.getRight();
             stop();
@@ -49,7 +63,6 @@ public class Hero extends Ship {
             pos.x = worldBounds.getLeft();
             stop();
         }
-
     }
 
     public void keyDown(int keycode) {
@@ -137,6 +150,13 @@ public class Hero extends Ship {
 
     private void stop() {
         v.setZero();
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom());
     }
 }
 

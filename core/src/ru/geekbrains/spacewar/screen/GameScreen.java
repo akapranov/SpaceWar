@@ -9,9 +9,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
+import ru.geekbrains.spacewar.base.ActionListener;
 import ru.geekbrains.spacewar.base.Base2DScreen;
 import ru.geekbrains.spacewar.math.Rect;
-import ru.geekbrains.spacewar.screen.gamescreen.Explosion;
+import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
+import ru.geekbrains.spacewar.screen.gamescreen.ButtonNewGame;
+import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
+import ru.geekbrains.spacewar.screen.gamescreen.MessageGameOver;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
 import ru.geekbrains.spacewar.screen.pool.ExplosionPool;
@@ -24,10 +30,21 @@ import ru.geekbrains.spacewar.utils.EnemyEmitter;
  *  Экран Игры
  */
 
-public class GameScreen extends Base2DScreen {
+public class GameScreen extends Base2DScreen implements ActionListener {
+
+    @Override
+    public void actionPerformed(Object src) {
+        if (src == buttonNewGame)
+            startNewGame();
+    }
+
+    private enum State {PLAYING, GAME_OVER}
 
     private static final int STAR_COUNT = 56;
 
+    private State state;
+    private MessageGameOver messageGameOver;
+    int frags;
     private Background background;
     private Texture bgTexture;
     private Hero hero;
@@ -44,6 +61,8 @@ public class GameScreen extends Base2DScreen {
 
     private EnemyPool enemyPool;
     private EnemyEmitter enemyEmitter;
+
+    private ButtonNewGame buttonNewGame;
 
     public GameScreen(Game game) {
         super(game);
@@ -66,12 +85,14 @@ public class GameScreen extends Base2DScreen {
         }
         heroPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/piu.wav"));
         enemyPiu = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        hero = new Hero(atlas, bulletPool, heroPiu);
-
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(atlas, explosionSound);
+        hero = new Hero(atlas, bulletPool, heroPiu, explosionPool);
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds, hero, enemyPiu);
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
+        messageGameOver = new MessageGameOver(atlas);
+        buttonNewGame = new ButtonNewGame(atlas,  this);
+        startNewGame();
     }
 
     @Override
@@ -93,22 +114,78 @@ public class GameScreen extends Base2DScreen {
         bulletPool.drawActiveSprites(batch);
         explosionPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
+        if (state == State.GAME_OVER) {
+            messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
+        }
         batch.end();
     }
 
     public void update(float delta) {
+        if (hero.isDestroyed()) {
+            state = State.GAME_OVER;
+        }
         for (int i = 0; i < star.length; i++) {
             star[i].update(delta);
         }
-        hero.update(delta);
-        bulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemyEmitter.generateEnemies(delta);
+        switch (state){
+            case PLAYING:
+                hero.update(delta);
+                bulletPool.updateActiveSprites(delta);
+                enemyPool.updateActiveSprites(delta);
+                enemyEmitter.generateEnemies(delta);
+            case GAME_OVER:
+                break;
+        }
     }
 
     public void checkCollisions() {
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + hero.getHalfWidth();
+            if (enemy.pos.dst2(hero.pos) < minDist * minDist) {
+                enemy.destroy();
+                hero.destroy();
+                state = State.GAME_OVER;
+                return;
+            }
+        }
 
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            for (Bullet bullet : bulletList) {
+                if (bullet.getOwner() != hero || bullet.isDestroyed()) {
+                    continue;
+                }
+                if (enemy.isBulletCollision(bullet)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.destroy();
+                    if (enemy.isDestroyed()) {
+                        frags++;
+                        break;
+                    }
+                }
+            }
+        }
+        for (Bullet bullet : bulletList) {
+            if (bullet.isDestroyed() || bullet.getOwner() == hero) {
+                continue;
+            }
+            if (hero.isBulletCollision(bullet)) {
+                hero.damage(bullet.getDamage());
+                bullet.destroy();
+                if (hero.isDestroyed()) {
+                    state = State.GAME_OVER;
+                }
+            }
+        }
     }
 
     public void deleteAllDestroyed() {
@@ -128,7 +205,6 @@ public class GameScreen extends Base2DScreen {
         enemyPiu.dispose();
         heroPiu.dispose();
         explosionSound.dispose();
-
     }
 
     @Override
@@ -143,25 +219,48 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        hero.keyDown(keycode);
+        if (state == State.PLAYING){
+            hero.keyDown(keycode);
+        }
         return super.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        hero.keyUp(keycode);
+        if (state == State.PLAYING){
+            hero.keyUp(keycode);
+        }
         return super.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        hero.touchDown(touch, pointer);
+        if (state == State.PLAYING){
+            hero.touchDown(touch, pointer);
+        }else{
+            buttonNewGame.touchDown(touch, pointer);
+        }
         return super.touchDown(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        hero.touchUp(touch, pointer);
+        if (state == State.PLAYING){
+            hero.touchUp(touch, pointer);
+        }else {
+            buttonNewGame.touchUp(touch, pointer);
+        }
         return super.touchUp(touch, pointer);
+    }
+    private void startNewGame() {
+        state = State.PLAYING;
+
+        frags = 0;
+
+        hero.startNewGame();
+
+        bulletPool.freeAllActiveObjects();
+        enemyPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
     }
 }
