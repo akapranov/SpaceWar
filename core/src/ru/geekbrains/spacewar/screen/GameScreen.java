@@ -13,6 +13,7 @@ import java.util.List;
 
 import ru.geekbrains.spacewar.base.ActionListener;
 import ru.geekbrains.spacewar.base.Base2DScreen;
+import ru.geekbrains.spacewar.base.Font;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
 import ru.geekbrains.spacewar.screen.gamescreen.ButtonNewGame;
@@ -41,6 +42,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private enum State {PLAYING, GAME_OVER}
 
     private static final int STAR_COUNT = 56;
+    private static final float FONT_SIZE  = 0.03f;
 
     private State state;
     private MessageGameOver messageGameOver;
@@ -63,6 +65,16 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private EnemyEmitter enemyEmitter;
 
     private ButtonNewGame buttonNewGame;
+
+    private static final String FRAGS = "Enemys killed: ";
+    private static final String HP = "HP: ";
+    private static final String LEVEL = "Level: ";
+
+    private Font font;
+    private StringBuilder sbFrags = new StringBuilder();
+    private StringBuilder sbHP = new StringBuilder();
+    private StringBuilder sbLevel = new StringBuilder();
+
 
     public GameScreen(Game game) {
         super(game);
@@ -92,6 +104,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
         messageGameOver = new MessageGameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas,  this);
+        font = new Font("font/font.fnt", "font/font.png");
+        font.setWorldSize(FONT_SIZE);
         startNewGame();
     }
 
@@ -118,6 +132,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             messageGameOver.draw(batch);
             buttonNewGame.draw(batch);
         }
+        printInfo();
         batch.end();
     }
 
@@ -262,5 +277,14 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         bulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
         explosionPool.freeAllActiveObjects();
+    }
+
+    public void printInfo(){
+        sbFrags.setLength(0);
+        sbHP.setLength(0);
+        sbLevel.setLength(0);
+        font.draw(batch,sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + 0.02f, worldBounds.getTop() - 0.02f);
+        font.draw(batch,sbHP.append(HP).append(hero.getHp()), worldBounds.getRight() - 0.2f, worldBounds.getBottom() + 0.06f);
+        font.draw(batch,sbLevel.append(LEVEL).append(1), worldBounds.getRight() - 0.2f, worldBounds.getTop() - 0.02f);
     }
 }
