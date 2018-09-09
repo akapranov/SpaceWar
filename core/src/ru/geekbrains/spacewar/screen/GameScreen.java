@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private enum State {PLAYING, GAME_OVER}
 
     private static final int STAR_COUNT = 56;
-    private static final float FONT_SIZE  = 0.03f;
+    private static final float FONT_SIZE  = 0.02f;
 
     private State state;
     private MessageGameOver messageGameOver;
@@ -284,7 +285,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         sbHP.setLength(0);
         sbLevel.setLength(0);
         font.draw(batch,sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + 0.02f, worldBounds.getTop() - 0.02f);
-        font.draw(batch,sbHP.append(HP).append(hero.getHp()), worldBounds.getRight() - 0.2f, worldBounds.getBottom() + 0.06f);
-        font.draw(batch,sbLevel.append(LEVEL).append(1), worldBounds.getRight() - 0.2f, worldBounds.getTop() - 0.02f);
+        font.draw(batch,sbHP.append(HP).append(hero.getHp()), worldBounds.pos.x, worldBounds.getTop() - 0.02f, Align.center);
+        font.draw(batch,sbLevel.append(LEVEL).append(1), worldBounds.getRight()- 0.02f, worldBounds.getTop() - 0.02f, Align.right );
     }
 }
