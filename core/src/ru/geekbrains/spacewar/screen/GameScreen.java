@@ -219,27 +219,37 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public boolean keyDown(int keycode) {
-        hero.keyDown(keycode);
+        if (state == State.PLAYING){
+            hero.keyDown(keycode);
+        }
         return super.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        hero.keyUp(keycode);
+        if (state == State.PLAYING){
+            hero.keyUp(keycode);
+        }
         return super.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        hero.touchDown(touch, pointer);
-        buttonNewGame.touchDown(touch, pointer);
+        if (state == State.PLAYING){
+            hero.touchDown(touch, pointer);
+        }else{
+            buttonNewGame.touchDown(touch, pointer);
+        }
         return super.touchDown(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        hero.touchUp(touch, pointer);
-        buttonNewGame.touchUp(touch, pointer);
+        if (state == State.PLAYING){
+            hero.touchUp(touch, pointer);
+        }else {
+            buttonNewGame.touchUp(touch, pointer);
+        }
         return super.touchUp(touch, pointer);
     }
     private void startNewGame() {
