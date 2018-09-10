@@ -80,10 +80,10 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         ENEMY_SMALL_BULLET_VY,
-                        ENEMY_SMALL_BULLET_DAMAGE * (level/2),
+                        ENEMY_SMALL_BULLET_DAMAGE * level,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HEIGHT,
-                        ENEMY_SMALL_HP * (level/2));
+                        ENEMY_SMALL_HP * level);
             }else if (tmp < 0.9f){
                 enemy.set(
                         enemyMediumRegion,
@@ -91,10 +91,10 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         ENEMY_MEDIUM_BULLET_VY,
-                        ENEMY_MEDIUM_BULLET_DAMAGE* (level/2),
+                        ENEMY_MEDIUM_BULLET_DAMAGE* level,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
-                        ENEMY_MEDIUM_HP* (level/2));
+                        ENEMY_MEDIUM_HP* level);
             }else{
                 enemy.set(
                 enemyBigRegion,
@@ -102,14 +102,13 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         ENEMY_BIG_BULLET_VY,
-                        ENEMY_BIG_BULLET_DAMAGE* (level/2),
+                        ENEMY_BIG_BULLET_DAMAGE* level,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HEIGHT,
-                        ENEMY_BIG_HP* (level/2));
+                        ENEMY_BIG_HP* level);
             }
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
-
         }
     }
     public void startNewGame(){

@@ -79,7 +79,6 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private StringBuilder sbLevel = new StringBuilder();
 
     private LifeLine lifeLine;
-    float lengthy;
     public GameScreen(Game game) {
         super(game);
     }
@@ -109,11 +108,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         messageGameOver = new MessageGameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas,  this);
         lifelineTexture = new Texture("lifeline.png");
-        lengthy = hero.getHp()/100.f;
-        lifeLine = new LifeLine(new TextureRegion(lifelineTexture), 1f);
         font = new Font("font/font.fnt", "font/font.png");
         font.setWorldSize(FONT_SIZE);
         startNewGame();
+        lifeLine = new LifeLine(new TextureRegion(lifelineTexture), hero.getHp());
     }
 
     @Override
@@ -162,6 +160,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             case GAME_OVER:
                 break;
         }
+        System.out.println( hero.getHp() + "   " );
     }
 
     public void checkCollisions() {
@@ -229,6 +228,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyPiu.dispose();
         heroPiu.dispose();
         explosionSound.dispose();
+        lifelineTexture.dispose();
     }
 
     @Override
