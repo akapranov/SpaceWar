@@ -17,8 +17,8 @@ public class Enemy extends Ship {
     private Hero hero;
     private Vector2 v0 = new Vector2();
 
-    public Enemy(BulletPool bulletPool, ExplosionPool explosionPooll, Sound piu, Hero hero, Rect worldBounds) {
-        super(bulletPool,explosionPooll, piu, worldBounds);
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound piu, Hero hero, Rect worldBounds) {
+        super(bulletPool,explosionPool, piu, worldBounds);
 
         this.hero = hero;
         this.v.set(v0);

@@ -19,6 +19,7 @@ import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
 import ru.geekbrains.spacewar.screen.gamescreen.ButtonNewGame;
 import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
+import ru.geekbrains.spacewar.screen.gamescreen.LifeLine;
 import ru.geekbrains.spacewar.screen.gamescreen.MessageGameOver;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
@@ -50,6 +51,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     int frags;
     private Background background;
     private Texture bgTexture;
+    private Texture lifelineTexture;
     private Hero hero;
     private Star star[];
     private TextureAtlas atlas;
@@ -76,7 +78,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private StringBuilder sbHP = new StringBuilder();
     private StringBuilder sbLevel = new StringBuilder();
 
-
+    private LifeLine lifeLine;
+    float lengthy;
     public GameScreen(Game game) {
         super(game);
     }
@@ -105,6 +108,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
         messageGameOver = new MessageGameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas,  this);
+        lifelineTexture = new Texture("lifeline.png");
+        lengthy = hero.getHp()/100.f;
+        lifeLine = new LifeLine(new TextureRegion(lifelineTexture), 1f);
         font = new Font("font/font.fnt", "font/font.png");
         font.setWorldSize(FONT_SIZE);
         startNewGame();
@@ -134,6 +140,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             buttonNewGame.draw(batch);
         }
         printInfo();
+        lifeLine.draw(batch);
         batch.end();
     }
 
@@ -151,6 +158,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
                 bulletPool.updateActiveSprites(delta);
                 enemyPool.updateActiveSprites(delta);
                 enemyEmitter.generateEnemies(delta, frags);
+                lifeLine.update(delta);
             case GAME_OVER:
                 break;
         }
@@ -231,6 +239,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             star[i].resize(worldBounds);
         }
         hero.resize(worldBounds);
+        lifeLine.resize(worldBounds);
     }
 
     @Override
