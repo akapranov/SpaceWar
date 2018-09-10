@@ -110,8 +110,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         lifelineTexture = new Texture("lifeline.png");
         font = new Font("font/font.fnt", "font/font.png");
         font.setWorldSize(FONT_SIZE);
+        lifeLine = new LifeLine(new TextureRegion(lifelineTexture));
         startNewGame();
-        lifeLine = new LifeLine(new TextureRegion(lifelineTexture), hero.getHp());
+
     }
 
     @Override
@@ -156,11 +157,12 @@ public class GameScreen extends Base2DScreen implements ActionListener {
                 bulletPool.updateActiveSprites(delta);
                 enemyPool.updateActiveSprites(delta);
                 enemyEmitter.generateEnemies(delta, frags);
-                lifeLine.update(delta);
+
             case GAME_OVER:
                 break;
         }
-        System.out.println( hero.getHp() + "   " );
+        lifeLine.update(delta, hero.getHp());
+        System.out.println( hero.getHp() + "   "+ lifeLine.getWidth());
     }
 
     public void checkCollisions() {
