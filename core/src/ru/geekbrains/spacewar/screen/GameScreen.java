@@ -213,9 +213,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     }
 
     public void deleteAllDestroyed() {
-       bulletPool.freeAllDestroyedActiveSprites();
-       explosionPool.freeAllDestroyedActiveSprites();
-       enemyPool.freeAllDestroyedActiveSprites();
+        bulletPool.freeAllDestroyedActiveSprites();
+        explosionPool.freeAllDestroyedActiveSprites();
+        enemyPool.freeAllDestroyedActiveSprites();
     }
 
     @Override

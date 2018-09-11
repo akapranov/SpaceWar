@@ -18,11 +18,11 @@ public class LifeLine extends Sprite{
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         setBottom(worldBounds.getBottom());
-        setLeft(worldBounds.getLeft());
+        setRight(worldBounds.getRight());
     }
 
     public void update(float delta, int lengthy) {
         super.update(delta);
-        setWidth((float)(lengthy) * 0.01f);
+        setSize((float)(lengthy) * 0.01f, LINE_HEIGHT);
     }
 }
