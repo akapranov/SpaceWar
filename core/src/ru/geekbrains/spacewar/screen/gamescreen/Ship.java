@@ -40,7 +40,11 @@ public class Ship extends Sprite {
         this.worldBounds = worldBounds;
     }
 
-    public Ship(TextureRegion region,ExplosionPool explosionPool, int rows, int cols, int frames, Sound sound) {
+    public int getHp() {
+        return hp;
+    }
+
+    public Ship(TextureRegion region, ExplosionPool explosionPool, int rows, int cols, int frames, Sound sound) {
         super(region, rows, cols, frames);
         this.explosionPool = explosionPool;
         this.sound = sound;
@@ -73,8 +77,9 @@ public class Ship extends Sprite {
 
     @Override
     public void destroy() {
-        boom();
         super.destroy();
+        boom();
+        hp = 0;
     }
 
     @Override

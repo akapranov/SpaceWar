@@ -8,15 +8,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.List;
 
 import ru.geekbrains.spacewar.base.ActionListener;
 import ru.geekbrains.spacewar.base.Base2DScreen;
+import ru.geekbrains.spacewar.base.Font;
 import ru.geekbrains.spacewar.math.Rect;
 import ru.geekbrains.spacewar.screen.gamescreen.Bullet;
 import ru.geekbrains.spacewar.screen.gamescreen.ButtonNewGame;
 import ru.geekbrains.spacewar.screen.gamescreen.Enemy;
+import ru.geekbrains.spacewar.screen.gamescreen.LifeLine;
 import ru.geekbrains.spacewar.screen.gamescreen.MessageGameOver;
 import ru.geekbrains.spacewar.screen.pool.BulletPool;
 import ru.geekbrains.spacewar.screen.pool.EnemyPool;
@@ -41,12 +44,14 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private enum State {PLAYING, GAME_OVER}
 
     private static final int STAR_COUNT = 56;
+    private static final float FONT_SIZE  = 0.02f;
 
     private State state;
     private MessageGameOver messageGameOver;
     int frags;
     private Background background;
     private Texture bgTexture;
+    private Texture lifelineTexture;
     private Hero hero;
     private Star star[];
     private TextureAtlas atlas;
@@ -64,6 +69,16 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     private ButtonNewGame buttonNewGame;
 
+    private static final String FRAGS = "Enemys killed: ";
+    private static final String HP = "HP: ";
+    private static final String LEVEL = "Level: ";
+
+    private Font font;
+    private StringBuilder sbFrags = new StringBuilder();
+    private StringBuilder sbHP = new StringBuilder();
+    private StringBuilder sbLevel = new StringBuilder();
+
+    private LifeLine lifeLine;
     public GameScreen(Game game) {
         super(game);
     }
@@ -92,7 +107,12 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
         messageGameOver = new MessageGameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas,  this);
+        lifelineTexture = new Texture("lifeline.png");
+        font = new Font("font/font.fnt", "font/font.png");
+        font.setWorldSize(FONT_SIZE);
+
         startNewGame();
+        lifeLine = new LifeLine(new TextureRegion(lifelineTexture));
     }
 
     @Override
@@ -118,6 +138,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             messageGameOver.draw(batch);
             buttonNewGame.draw(batch);
         }
+        printInfo();
+        lifeLine.draw(batch);
         batch.end();
     }
 
@@ -134,10 +156,12 @@ public class GameScreen extends Base2DScreen implements ActionListener {
                 hero.update(delta);
                 bulletPool.updateActiveSprites(delta);
                 enemyPool.updateActiveSprites(delta);
-                enemyEmitter.generateEnemies(delta);
+                enemyEmitter.generateEnemies(delta, frags);
             case GAME_OVER:
                 break;
         }
+        lifeLine.update(delta, hero.getHp());
+        System.out.println( hero.getHp() + "   " + lifeLine.getWidth());
     }
 
     public void checkCollisions() {
@@ -189,9 +213,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     }
 
     public void deleteAllDestroyed() {
-       bulletPool.freeAllDestroyedActiveSprites();
-       explosionPool.freeAllDestroyedActiveSprites();
-       enemyPool.freeAllDestroyedActiveSprites();
+        bulletPool.freeAllDestroyedActiveSprites();
+        explosionPool.freeAllDestroyedActiveSprites();
+        enemyPool.freeAllDestroyedActiveSprites();
     }
 
     @Override
@@ -205,6 +229,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyPiu.dispose();
         heroPiu.dispose();
         explosionSound.dispose();
+        lifelineTexture.dispose();
     }
 
     @Override
@@ -215,6 +240,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             star[i].resize(worldBounds);
         }
         hero.resize(worldBounds);
+        lifeLine.resize(worldBounds);
     }
 
     @Override
@@ -258,9 +284,19 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         frags = 0;
 
         hero.startNewGame();
+        enemyEmitter.startNewGame();
 
         bulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
         explosionPool.freeAllActiveObjects();
+    }
+
+    public void printInfo(){
+        sbFrags.setLength(0);
+        sbHP.setLength(0);
+        sbLevel.setLength(0);
+        font.draw(batch,sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + 0.02f, worldBounds.getTop() - 0.02f);
+        font.draw(batch,sbHP.append(HP).append(hero.getHp()), worldBounds.pos.x, worldBounds.getTop() - 0.02f, Align.center);
+        font.draw(batch,sbLevel.append(LEVEL).append(enemyEmitter.getLevel()), worldBounds.getRight()- 0.02f, worldBounds.getTop() - 0.02f, Align.right );
     }
 }
