@@ -8,9 +8,13 @@ import ru.geekbrains.spacewar.math.Rect;
 public class LifeLine extends Sprite{
     private static final float LINE_HEIGHT = 0.02f;
 
+    private float lineWidth;
+
     public LifeLine(TextureRegion region){
         super(region);
         setHeight(LINE_HEIGHT);
+        this.lineWidth = 1f;
+        setWidth(lineWidth);
     }
 
     @Override
@@ -22,7 +26,6 @@ public class LifeLine extends Sprite{
 
     public void update(float delta, int lengthy) {
         super.update(delta);
-        float x = (float)(lengthy) * 0.01f;
-        setWidth(x);
+        this.lineWidth = (float)(lengthy) * 0.01f;
     }
 }

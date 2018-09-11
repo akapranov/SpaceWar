@@ -77,8 +77,9 @@ public class Ship extends Sprite {
 
     @Override
     public void destroy() {
-        boom();
         super.destroy();
+        boom();
+        hp = 0;
     }
 
     @Override

@@ -110,9 +110,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         lifelineTexture = new Texture("lifeline.png");
         font = new Font("font/font.fnt", "font/font.png");
         font.setWorldSize(FONT_SIZE);
-        lifeLine = new LifeLine(new TextureRegion(lifelineTexture));
-        startNewGame();
 
+        startNewGame();
+        lifeLine = new LifeLine(new TextureRegion(lifelineTexture));
     }
 
     @Override
@@ -139,7 +139,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             buttonNewGame.draw(batch);
         }
         printInfo();
-        lifeLine.draw(batch);
+
         batch.end();
     }
 
@@ -162,7 +162,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
                 break;
         }
         lifeLine.update(delta, hero.getHp());
-        System.out.println( hero.getHp() + "   "+ lifeLine.getWidth());
+        System.out.println( hero.getHp() + "   " + lifeLine.getWidth());
     }
 
     public void checkCollisions() {
@@ -296,6 +296,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         sbFrags.setLength(0);
         sbHP.setLength(0);
         sbLevel.setLength(0);
+        lifeLine.draw(batch);
         font.draw(batch,sbFrags.append(FRAGS).append(frags), worldBounds.getLeft() + 0.02f, worldBounds.getTop() - 0.02f);
         font.draw(batch,sbHP.append(HP).append(hero.getHp()), worldBounds.pos.x, worldBounds.getTop() - 0.02f, Align.center);
         font.draw(batch,sbLevel.append(LEVEL).append(enemyEmitter.getLevel()), worldBounds.getRight()- 0.02f, worldBounds.getTop() - 0.02f, Align.right );
